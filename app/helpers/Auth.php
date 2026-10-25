@@ -193,7 +193,7 @@ class Auth
     {
         self::requireAuth();
 
-        if (!self::hasRole($roles)) {
+        if (!self::hasRole($roles) && !self::isAdmin()) {
             http_response_code(403);
             require __DIR__ . '/../views/errors/403.php';
             exit;
