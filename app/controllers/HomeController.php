@@ -11,6 +11,12 @@ class HomeController
 {
     public function index(): void
     {
+        // La portada promocional es exclusiva de visitantes.
+        // Cada usuario autenticado entra a su panel segun el rol.
+        if (Auth::check()) {
+            Auth::redirectToDashboard();
+        }
+
         // ofertas promocionales de ejemplo, claramente identificadas como demostrativas
         $promocionesDemo = [
             [
