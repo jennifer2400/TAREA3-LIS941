@@ -44,10 +44,10 @@
             <div class="col-lg-3 col-md-6">
                 <h6 class="fw-bold text-uppercase text-warning fs-7 mb-3">Alcance Persona 1</h6>
                 <p class="small text-white-50 mb-2">
-                    Este módulo implementa el 100% funcional del registro de clientes (18+), autenticación unificada clientes/empresas, y el esqueleto común de base de datos.
+                    Proyecto académico MVC: registros, autenticación, ofertas, compras simuladas y reportes.
                 </p>
                 <p class="small text-white-50 mb-0">
-                    <span class="text-warning">*</span> Publicación de ofertas, canje, facturación y reportes reservados para la integración de los compañeros.
+                    <span class="text-warning">*</span> Las facturas y los pagos son demostrativos; no se realiza cobro real ni facturación fiscal.
                 </p>
             </div>
         </div>
