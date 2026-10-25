@@ -24,7 +24,7 @@ require __DIR__ . '/../layouts/alerts.php';
         </div>
 
         <div class="d-flex gap-2">
-            <a href="<?= url('/#promociones') ?>" class="btn btn-outline-cuponera rounded-pill btn-sm px-3 fw-semibold">
+            <a href="<?= url('/ofertas') ?>" class="btn btn-outline-cuponera rounded-pill btn-sm px-3 fw-semibold">
                 <i class="bi bi-tag-fill me-1"></i> Ver Catálogo de Ofertas
             </a>
             <form action="<?= url('/logout') ?>" method="POST" class="d-inline">
@@ -87,49 +87,59 @@ require __DIR__ . '/../layouts/alerts.php';
             </div>
         </div>
 
-        <!-- columna de mis cupones y estado del módulo -->
         <div class="col-lg-8">
-            <!-- nota informativa del alcance de persona 1 -->
-            <div class="card border-0 shadow-sm rounded-4 bg-white mb-4">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-start gap-3">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3 flex-shrink-0">
-                            <i class="bi bi-mortarboard-fill fs-3"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold text-dark mb-1">Módulo Persona 1 Completado</h5>
-                            <p class="text-secondary small mb-2">
-                                Has iniciado sesión correctamente con el rol de <strong>Cliente</strong>. Las validaciones de DUI, mayoría de edad exacta (18+), formato de correo y encriptación de contraseña con <code>password_hash()</code> fueron verificadas satisfactoriamente por el backend.
-                            </p>
-                            <span class="badge bg-success-subtle text-success border border-success-subtle small">
-                                <i class="bi bi-shield-check me-1"></i> Sesión protegida y regenerada
-                            </span>
-                        </div>
-                    </div>
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100"><div class="card-body p-4">
+                        <div class="text-secondary small">Cupones adquiridos</div>
+                        <div class="fs-2 fw-bold text-cuponera"><?= $totalCupones ?></div>
+                    </div></div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100"><div class="card-body p-4">
+                        <div class="text-secondary small">Cupones disponibles para canje</div>
+                        <div class="fs-2 fw-bold text-success"><?= $totalActivos ?></div>
+                    </div></div>
                 </div>
             </div>
-
-            <!-- sección: mis cupones adquiridos -->
             <div class="card border-0 shadow-sm rounded-4 bg-white">
-                <div class="card-header bg-white p-4 border-0 d-flex justify-content-between align-items-center">
+                <div class="card-header bg-white p-4 border-0 d-flex flex-wrap gap-2 justify-content-between align-items-center">
                     <div>
-                        <h5 class="fw-bold text-dark mb-0">Mis Cupones Adquiridos</h5>
-                        <small class="text-muted">Historial y códigos de canje de tus compras</small>
+                        <h5 class="fw-bold text-dark mb-0">Mis cupones adquiridos</h5>
+                        <small class="text-muted">Compras y códigos de canje</small>
                     </div>
-                    <span class="badge bg-secondary-subtle text-secondary border">0 cupones activos</span>
+                    <span class="badge bg-success-subtle text-success border"><?= $totalActivos ?> disponibles para canje</span>
                 </div>
-
-                <div class="card-body p-4 text-center py-5">
-                    <div class="p-4 bg-light rounded-circle d-inline-flex align-items-center justify-content-center text-muted mb-3" style="width: 72px; height: 72px;">
-                        <i class="bi bi-ticket-detailed fs-1 text-secondary"></i>
-                    </div>
-                    <h6 class="fw-bold text-dark mb-1">Aún no tienes cupones comprados</h6>
-                    <p class="text-secondary small max-w-md mx-auto mb-4">
-                        El flujo transaccional de compra de cupones, facturación y generación de códigos QR/alfanuméricos corresponde a los módulos de integración de los compañeros (Persona 2 / Persona 3).
-                    </p>
-                    <a href="<?= url('/#promociones') ?>" class="btn btn-cuponera rounded-pill px-4 fw-semibold shadow-xs">
-                        <i class="bi bi-search me-1"></i> Explorar Ofertas Demostrativas
-                    </a>
+                <div class="card-body p-4">
+                    <?php if (empty($cupones)): ?>
+                        <div class="text-center py-4">
+                            <i class="bi bi-ticket-detailed fs-1 text-secondary"></i>
+                            <h6 class="fw-bold mt-3">Aún no tienes cupones comprados</h6>
+                            <p class="text-secondary small">Explora las ofertas disponibles para realizar tu primera compra.</p>
+                            <a href="<?= url('/ofertas') ?>" class="btn btn-cuponera rounded-pill px-4">Explorar ofertas</a>
+                        </div>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead><tr><th>Oferta</th><th>Empresa</th><th>Código</th><th>Estado</th></tr></thead>
+                                <tbody>
+                                <?php foreach (array_slice($cupones, 0, 5) as $cupon): ?>
+                                    <?php $vigente = $cupon['estado'] === 'disponible' && $cupon['fecha_limite_canje'] >= date('Y-m-d'); ?>
+                                    <tr>
+                                        <td><?= e($cupon['titulo']) ?></td>
+                                        <td><?= e($cupon['nombre_comercial']) ?></td>
+                                        <td><code class="text-break"><?= e($cupon['codigo_cupon']) ?></code></td>
+                                        <td><span class="badge <?= $vigente ? 'bg-success' : 'bg-secondary' ?>"><?= e($vigente ? 'disponible' : ($cupon['estado'] === 'disponible' ? 'vencido' : $cupon['estado'])) ?></span></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <a href="<?= url('/cliente/cupones') ?>" class="btn btn-cuponera rounded-pill">Ver todos mis cupones</a>
+                            <a href="<?= url('/cliente/facturas') ?>" class="btn btn-outline-secondary rounded-pill">Mis facturas</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
