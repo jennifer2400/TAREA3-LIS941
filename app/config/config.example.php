@@ -11,16 +11,16 @@ return [
     'app' => [
         'name'        => 'La Cuponera SV',
         'env'         => 'development', // 'development' o 'production'
-        'debug'       => true,
+        'debug'       => false,
         // url base: puedes dejarla vacía para autodetección o especificarla
-        // ejemplos: 'http://localhost/tarea3/public' o 'http://localhost:8000'
+        // ejemplos: 'http://localhost/app' o 'http://localhost:8000'
         'base_url'    => '',
         'timezone'    => 'America/El_Salvador',
     ],
 
     'database' => [
         'host'     => '127.0.0.1',
-        'port'     => 3307,          // 3306 para instalación estándar, 3307 en xampp con mysql secundario
+        'port'     => 3306,          // Puerto MySQL predeterminado: 3306
         'dbname'   => 'lacuponera_sv',
         'username' => 'root',
         'password' => '',
