@@ -1,0 +1,14 @@
+<?php $pageTitle='Registro de empresas';require __DIR__.'/../layouts/header.php';require __DIR__.'/../layouts/navbar.php';require __DIR__.'/../layouts/alerts.php'; ?>
+<div class="container py-5" style="max-width:900px"><div class="card shadow-sm border-0 rounded-4 p-4">
+<h2 class="fw-bold">Registrar empresa</h2><p class="text-muted">Completa los datos de tu empresa para solicitar acceso a La Cuponera SV. La solicitud será revisada por un administrador y solo podrás publicar ofertas después de su aprobación.</p>
+<?php if($errors): ?><div class="alert alert-danger"><ul class="mb-0"><?php foreach($errors as $error):?><li><?=e($error)?></li><?php endforeach;?></ul></div><?php endif;?>
+<form method="post" action="<?=url('/registro-empresa')?>" class="row g-3"><?=Csrf::field()?>
+<?php foreach (['usuario'=>'Usuario de acceso','correo'=>'Correo de acceso','nombre_comercial'=>'Nombre comercial','razon_social'=>'Razón social','nit'=>'NIT','telefono'=>'Teléfono','correo_contacto'=>'Correo de contacto','direccion'=>'Dirección'] as $field=>$label):?>
+<div class="col-md-6"><label class="form-label" for="<?=e($field)?>"><?=e($label)?></label><input class="form-control" id="<?=e($field)?>" name="<?=e($field)?>" value="<?=e($old[$field]??'')?>" maxlength="<?= $field==='direccion'?'500':'150' ?>" required></div>
+<?php endforeach;?>
+<div class="col-md-6"><label class="form-label" for="id_rubro">Rubro</label><select class="form-select" name="id_rubro" id="id_rubro"><option value="">Sin especificar</option><?php foreach($rubros as $r):?><option value="<?= (int)$r['id']?>" <?=($old['id_rubro']??'')==(string)$r['id']?'selected':''?>><?=e($r['nombre'])?></option><?php endforeach;?></select></div>
+<div class="col-md-6"><label class="form-label" for="password">Contraseña</label><input type="password" class="form-control" id="password" name="password" autocomplete="new-password" required></div>
+<div class="col-md-6"><label class="form-label" for="password_confirm">Confirmar contraseña</label><input type="password" class="form-control" id="password_confirm" name="password_confirm" autocomplete="new-password" required></div>
+<div class="col-12 form-check ms-2"><input class="form-check-input" type="checkbox" name="terminos" value="1" id="terminos" required><label class="form-check-label" for="terminos">Acepto los términos y condiciones.</label></div>
+<div class="col-12"><div class="alert alert-info mb-3"><strong>Importante:</strong> enviar esta solicitud no significa que la empresa esté aprobada. Un administrador debe revisar la información y, al aprobarla, asignará el porcentaje de comisión correspondiente.</div><button type="submit" class="btn btn-primary rounded-pill px-4">Enviar solicitud de registro</button> <a href="<?=url('/login')?>" class="btn btn-outline-secondary rounded-pill">Volver</a></div></form></div></div>
+<?php require __DIR__.'/../layouts/footer.php'; ?>

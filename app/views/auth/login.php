@@ -57,7 +57,7 @@ require __DIR__ . '/../layouts/alerts.php';
                                 <button class="btn btn-outline-secondary border-start-0 rounded-end-3 toggle-password" 
                                         type="button" 
                                         data-target="password"
-                                        title="Mostrar / Ocultar contraseña">
+                                        title="Mostrar contraseña" aria-label="Mostrar contraseña" aria-pressed="false">
                                     <i class="bi bi-eye"></i>
                                 </button>
                                 <div class="invalid-feedback">Por favor, ingresa tu contraseña.</div>
@@ -103,9 +103,6 @@ require __DIR__ . '/../layouts/alerts.php';
                         <button type="button" class="btn btn-sm btn-outline-success rounded-pill btn-fill-demo" data-user="pizzanostra" data-pass="Cuponera2025!">
                             <i class="bi bi-building"></i> Empresa (Aprobada): <strong>pizzanostra</strong>
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-warning text-dark rounded-pill btn-fill-demo" data-user="cafebistro" data-pass="Cuponera2025!">
-                            <i class="bi bi-clock-history"></i> Empresa (Pendiente): <strong>cafebistro</strong>
-                        </button>
                         <button type="button" class="btn btn-sm btn-outline-dark rounded-pill btn-fill-demo" data-user="admin_demo" data-pass="Cuponera2025!">
                             <i class="bi bi-shield-lock"></i> Admin: <strong>admin_demo</strong>
                         </button>
@@ -116,4 +113,5 @@ require __DIR__ . '/../layouts/alerts.php';
     </div>
 </div>
 
+<div class="text-center pb-3"><a href="<?=url('/registro-empresa')?>">¿Representas una empresa? Regístrala aquí</a></div>
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

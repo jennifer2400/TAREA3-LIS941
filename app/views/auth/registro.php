@@ -61,9 +61,9 @@ $errors = $errors ?? [];
                                                required 
                                                pattern="^[a-zA-Z0-9_]{4,30}$">
                                         <?php if (isset($errors['usuario'])): ?>
-                                            <div class="invalid-feedback"><?= e($errors['usuario']) ?></div>
+                                            <div class="invalid-feedback w-100"><?= e($errors['usuario']) ?></div>
                                         <?php else: ?>
-                                            <div class="form-text small">Entre 4 y 30 caracteres alfanuméricos.</div>
+                                            <div class="form-text small w-100">Entre 4 y 30 caracteres alfanuméricos.</div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@ $errors = $errors ?? [];
                                                placeholder="nombre@ejemplo.com" 
                                                required>
                                         <?php if (isset($errors['correo'])): ?>
-                                            <div class="invalid-feedback"><?= e($errors['correo']) ?></div>
+                                            <div class="invalid-feedback w-100"><?= e($errors['correo']) ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@ $errors = $errors ?? [];
                                             <i class="bi bi-eye"></i>
                                         </button>
                                         <?php if (isset($errors['password'])): ?>
-                                            <div class="invalid-feedback d-block"><?= e($errors['password']) ?></div>
+                                            <div class="invalid-feedback d-block w-100"><?= e($errors['password']) ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -127,7 +127,7 @@ $errors = $errors ?? [];
                                                placeholder="Repite tu contraseña" 
                                                required>
                                         <?php if (isset($errors['password_confirm'])): ?>
-                                            <div class="invalid-feedback"><?= e($errors['password_confirm']) ?></div>
+                                            <div class="invalid-feedback w-100"><?= e($errors['password_confirm']) ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -168,7 +168,7 @@ $errors = $errors ?? [];
                                            placeholder="ej. Juan Carlos" 
                                            required>
                                     <?php if (isset($errors['nombres'])): ?>
-                                        <div class="invalid-feedback"><?= e($errors['nombres']) ?></div>
+                                        <div class="invalid-feedback w-100"><?= e($errors['nombres']) ?></div>
                                     <?php endif; ?>
                                 </div>
 
@@ -185,7 +185,7 @@ $errors = $errors ?? [];
                                            placeholder="ej. Pérez Alvarado" 
                                            required>
                                     <?php if (isset($errors['apellidos'])): ?>
-                                        <div class="invalid-feedback"><?= e($errors['apellidos']) ?></div>
+                                        <div class="invalid-feedback w-100"><?= e($errors['apellidos']) ?></div>
                                     <?php endif; ?>
                                 </div>
 
@@ -205,9 +205,9 @@ $errors = $errors ?? [];
                                                maxlength="10" 
                                                required>
                                         <?php if (isset($errors['dui'])): ?>
-                                            <div class="invalid-feedback"><?= e($errors['dui']) ?></div>
+                                            <div class="invalid-feedback w-100"><?= e($errors['dui']) ?></div>
                                         <?php else: ?>
-                                            <div class="form-text small">Formato salvadoreño: 8 dígitos + guion + 1 dígito.</div>
+                                            <div class="form-text small w-100">Formato salvadoreño: 8 dígitos + guion + 1 dígito.</div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -227,7 +227,7 @@ $errors = $errors ?? [];
                                                max="<?= date('Y-m-d') ?>" 
                                                required>
                                         <?php if (isset($errors['fecha_nacimiento'])): ?>
-                                            <div class="invalid-feedback"><?= e($errors['fecha_nacimiento']) ?></div>
+                                            <div class="invalid-feedback w-100"><?= e($errors['fecha_nacimiento']) ?></div>
                                         <?php endif; ?>
                                     </div>
                                     <!-- indicador reactivo de mayoría de edad -->
@@ -275,7 +275,7 @@ $errors = $errors ?? [];
                                     Confirmo que soy <strong>mayor de 18 años</strong>, que los datos suministrados son fidedignos y acepto los <a href="#" class="text-cuponera text-decoration-none">Términos del Servicio</a> y la <a href="#" class="text-cuponera text-decoration-none">Política de Privacidad</a> de La Cuponera SV.
                                 </label>
                                 <?php if (isset($errors['terminos'])): ?>
-                                    <div class="invalid-feedback"><?= e($errors['terminos']) ?></div>
+                                    <div class="invalid-feedback w-100"><?= e($errors['terminos']) ?></div>
                                 <?php endif; ?>
                             </div>
                         </div>

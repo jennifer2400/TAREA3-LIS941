@@ -1,0 +1,5 @@
+<?php $pageTitle='Restablecer contraseña';require __DIR__.'/../layouts/header.php';require __DIR__.'/../layouts/navbar.php';require __DIR__.'/../layouts/alerts.php'; ?>
+<div class="container py-5" style="max-width:600px"><div class="card rounded-4 border-0 shadow-sm p-4"><h2>Nueva contraseña</h2>
+<?php if(!$valid):?><div class="alert alert-danger">El enlace es inválido, ya fue utilizado o ha vencido.</div><a href="<?=url('/recuperar-password')?>">Solicitar otro enlace</a>
+<?php else:?><form method="post" action="<?=url('/restablecer-password')?>"><?=Csrf::field()?><input type="hidden" name="token" value="<?=e($token)?>"><label class="form-label" for="password">Nueva contraseña</label><input type="password" autocomplete="new-password" class="form-control mb-3" id="password" name="password" required><label for="password_confirm" class="form-label">Confirmar contraseña</label><input type="password" autocomplete="new-password" class="form-control mb-3" id="password_confirm" name="password_confirm" required><button class="btn btn-primary">Actualizar contraseña</button></form><?php endif;?></div></div>
+<?php require __DIR__.'/../layouts/footer.php';?>
