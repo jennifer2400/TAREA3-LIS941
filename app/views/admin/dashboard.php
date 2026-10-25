@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Panel de Administración — Esqueleto de Integración';
+$pageTitle = 'Panel de Administración';
 require __DIR__ . '/../layouts/header.php';
 require __DIR__ . '/../layouts/navbar.php';
 require __DIR__ . '/../layouts/alerts.php';
@@ -14,11 +14,11 @@ require __DIR__ . '/../layouts/alerts.php';
                     <i class="bi bi-shield-lock-fill me-1"></i> ROL: ADMINISTRADOR DEL SISTEMA
                 </span>
                 <span class="badge bg-primary-subtle text-primary border border-primary-subtle small">
-                    Esqueleto Compartido (Persona 1)
+                    Acceso global por rol
                 </span>
             </div>
             <h2 class="fw-bold text-dark mb-0">Panel de Control Administrativo</h2>
-            <p class="text-secondary small mb-0">Estructura base preparada para la integración de los módulos de administración y reportes.</p>
+            <p class="text-secondary small mb-0">Gestión general de usuarios, empresas, promociones, compras, facturas, canjes y reportes.</p>
         </div>
 
         <div class="d-flex gap-2">
@@ -31,7 +31,9 @@ require __DIR__ . '/../layouts/alerts.php';
         </div>
     </div>
 
-    <!-- métricas del esqueleto en base de datos real -->
+    <div class="d-flex flex-wrap gap-2 mb-4"><a class="btn btn-primary" href="<?=url('/admin/empresas')?>">Aprobar empresas</a><a class="btn btn-outline-primary" href="<?=url('/admin/administradores')?>">Registrar administradores</a></div>
+    <div class="d-flex flex-wrap gap-2 mb-4"><a class="btn btn-outline-primary" href="<?=url('/admin/usuarios')?>">Usuarios</a><a class="btn btn-outline-primary" href="<?=url('/empresa/promociones')?>">Promociones</a><a class="btn btn-outline-primary" href="<?=url('/cliente/cupones')?>">Cupones vendidos</a><a class="btn btn-outline-primary" href="<?=url('/cliente/facturas')?>">Facturas</a><a class="btn btn-outline-primary" href="<?=url('/empresa/canjes')?>">Canjes</a><a class="btn btn-outline-primary" href="<?=url('/admin/reportes')?>">Reportes</a></div>
+<!-- métricas del sistema -->
     <div class="row g-4 mb-4">
         <div class="col-sm-6 col-lg-3">
             <div class="card border-0 shadow-sm rounded-4 bg-white p-3 hover-lift">

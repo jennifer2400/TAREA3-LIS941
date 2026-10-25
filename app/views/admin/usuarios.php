@@ -1,0 +1,4 @@
+<?php $pageTitle='Usuarios y perfiles';require __DIR__.'/../layouts/header.php';require __DIR__.'/../layouts/navbar.php';require __DIR__.'/../layouts/alerts.php';?>
+<main class="container py-5"><h1 class="h2 mb-3">Usuarios y perfiles</h1><p class="text-muted">Consulta de las cuentas existentes. Para crear administradores utiliza el formulario exclusivo de administración.</p>
+<div class="table-responsive card p-3"><table class="table table-striped"><thead><tr><th>ID</th><th>Usuario</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Creado</th></tr></thead><tbody><?php foreach($usuarios as $u):?><tr><td><?= (int)$u['id'] ?></td><td><?=e($u['usuario'])?></td><td><?=e($u['correo'])?></td><td><?=e($u['rol'])?></td><td><?=e($u['estado'])?></td><td><?=e($u['created_at'])?></td></tr><?php endforeach;?></tbody></table></div></main>
+<?php require __DIR__.'/../layouts/footer.php'; ?>
