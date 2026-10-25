@@ -1,61 +1,126 @@
 <?php
-require_once __DIR__ . '/../models/PasswordReset.php';
 require_once __DIR__ . '/../models/Usuario.php';
-class PasswordResetController {
-    public function showRequestForm(): void {
+
+class PasswordResetController
+{
+    // Recuperación sin verificación externa: únicamente para la demostración local.
+    private static function enabled(): bool
+    {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+        $config = require __DIR__ . '/../config/config.php';
+        return in_array($ip, ['127.0.0.1', '::1'], true)
+            && ($config['app']['env'] ?? '') === 'development';
+    }
+
+    private static function ensureLocal(): void
+    {
+        if (!self::enabled()) {
+            http_response_code(403);
+            exit('Recuperación simplificada no disponible en este entorno.');
+        }
+        header('Cache-Control: no-store, private');
+    }
+
+    private static function go(string $path): void
+    {
+        header('Location: ' . url($path), true, 303);
+        exit;
+    }
+
+    public function showRequestForm(): void
+    {
         Auth::requireGuest();
+        self::ensureLocal();
         require __DIR__ . '/../views/auth/password_reset.php';
     }
-    public function processRequest(): void {
+
+    public function processRequest(): void
+    {
         Auth::requireGuest();
-        if (!Csrf::validate($_POST['csrf_token']??'')) {Flash::error('Sesión inválida.');header('Location: '.url('/recuperar-password'));exit;}
-        $correo=trim((string)($_POST['correo']??''));
-        if (!filter_var($correo,FILTER_VALIDATE_EMAIL)) {Flash::error('Ingresa un correo válido.');header('Location: '.url('/recuperar-password'));exit;}
-        // Mensaje idéntico tanto si existe como si no existe: evita enumeración.
-        $usuario=Usuario::findByIdentifier($correo);
-        if ($usuario && strcasecmp($usuario['correo'],$correo)===0 && $usuario['estado']==='activo') {
-            $config=require __DIR__.'/../config/config.php';
-            $seconds=(int)($config['security']['token_expiration']??3600);
-            $raw=PasswordReset::createResetToken((int)$usuario['id'],$seconds);
-            $link=url('/restablecer-password').'?token='.rawurlencode($raw);
-            // En modo local sin SMTP, el enlace se registra solo en el log privado de PHP.
-            // No se muestra el token en pantalla ni se incluye en Git.
-            if (($config['app']['env']??'')==='development' && !empty($config['app']['debug'])) {
-                $_SESSION['development_reset_link'] = $link;
-                error_log('CUPONERA RECUPERACION SOLO DESARROLLO para '.$correo.': '.$link);
-            } else {
-                // Entrega por correo usando mail() si el servidor está configurado con SMTP.
-                if (!mail($correo,'Restablecer contraseña — La Cuponera SV',"Abre este enlace para restablecer tu contraseña:
-".$link."
-Este enlace caduca en una hora.", 'Content-Type: text/plain; charset=UTF-8')) {
-                    error_log('No se pudo enviar correo de recuperación a '.$correo);
-                }
-            }
+        self::ensureLocal();
+        if (!Csrf::validate($_POST['csrf_token'] ?? '')) {
+            Flash::error('La solicitud caducó. Actualiza la página e inténtalo nuevamente.');
+            self::go('/recuperar-password');
         }
-        Flash::info('Si el correo corresponde a una cuenta activa, recibirás instrucciones para restablecer la contraseña. En desarrollo revisa el registro privado de errores de PHP.');
-        header('Location: '.url('/recuperar-password'));exit;
+
+        $now = time();
+        $attempts = $_SESSION['recovery_attempts'] ?? ['start' => $now, 'count' => 0];
+        if (($now - (int)($attempts['start'] ?? 0)) > 900) {
+            $attempts = ['start' => $now, 'count' => 0];
+        }
+        if ((int)($attempts['count'] ?? 0) >= 5) {
+            Flash::error('Demasiados intentos. Inténtalo después de 15 minutos.');
+            self::go('/recuperar-password');
+        }
+        $attempts['count']++;
+        $_SESSION['recovery_attempts'] = $attempts;
+
+        $username = trim((string)($_POST['usuario'] ?? ''));
+        $email = trim((string)($_POST['correo'] ?? ''));
+        if ($username === '' || strlen($username) > 50 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Flash::error('Revisa el nombre de usuario y el correo ingresados.');
+            self::go('/recuperar-password');
+        }
+
+        $user = Usuario::findByIdentifier($username);
+        if (!$user || $user['estado'] !== 'activo'
+            || strcasecmp((string)$user['usuario'], $username) !== 0
+            || strcasecmp((string)$user['correo'], $email) !== 0) {
+            Flash::error('No se pudo verificar la combinación de usuario y correo.');
+            self::go('/recuperar-password');
+        }
+
+        session_regenerate_id(true);
+        $_SESSION['recovery_verified'] = ['id' => (int)$user['id'], 'until' => time() + 600];
+        self::go('/restablecer-password');
     }
-    public function showResetForm(): void {
-        Auth::requireGuest();
-        $token=(string)($_GET['token']??'');
-        $valid=PasswordReset::findValid($token)!==null;
-        require __DIR__.'/../views/auth/password_new.php';
+
+    private static function validSession(): ?int
+    {
+        $info = $_SESSION['recovery_verified'] ?? null;
+        if (!is_array($info) || (int)($info['until'] ?? 0) < time() || (int)($info['id'] ?? 0) <= 0) {
+            unset($_SESSION['recovery_verified']);
+            return null;
+        }
+        return (int)$info['id'];
     }
-    public function resetPassword(): void {
+
+    public function showResetForm(): void
+    {
         Auth::requireGuest();
-        if (!Csrf::validate($_POST['csrf_token']??'')) {http_response_code(403);exit('Solicitud inválida.');}
-        $token=(string)($_POST['token']??'');
-        $password=(string)($_POST['password']??'');
-        $check=Validator::validatePassword($password);
-        if (!$check['valid'] || $password!==($_POST['password_confirm']??'')) {
-            Flash::error('Verifica la contraseña y su confirmación. '.implode(' ',$check['errors']));
-            header('Location: '.url('/restablecer-password').'?token='.rawurlencode($token));exit;
+        self::ensureLocal();
+        $valid = self::validSession() !== null;
+        require __DIR__ . '/../views/auth/password_new.php';
+    }
+
+    public function resetPassword(): void
+    {
+        Auth::requireGuest();
+        self::ensureLocal();
+        if (!Csrf::validate($_POST['csrf_token'] ?? '')) {
+            Flash::error('La solicitud caducó.');
+            self::go('/recuperar-password');
         }
-        if (!PasswordReset::consumeAndUpdate($token,password_hash($password,PASSWORD_DEFAULT))) {
-            Flash::error('El enlace ya fue utilizado o ha caducado.');
-            header('Location: '.url('/recuperar-password'));exit;
+        $id = self::validSession();
+        if ($id === null) {
+            Flash::error('La solicitud expiró. Comienza de nuevo.');
+            self::go('/recuperar-password');
         }
-        Flash::success('Contraseña actualizada. Ahora puedes iniciar sesión.');
-        header('Location: '.url('/login'));exit;
+        $password = (string)($_POST['password'] ?? '');
+        $confirm = (string)($_POST['password_confirm'] ?? '');
+        $validation = Validator::validatePassword($password);
+        if (!$validation['valid'] || $password !== $confirm) {
+            $reason = implode(' ', $validation['errors']);
+            Flash::error('Las contraseñas no coinciden o no cumplen los requisitos. ' . $reason);
+            self::go('/restablecer-password');
+        }
+        if (!Usuario::updatePassword($id, password_hash($password, PASSWORD_DEFAULT))) {
+            Flash::error('No fue posible actualizar la contraseña.');
+            self::go('/restablecer-password');
+        }
+        unset($_SESSION['recovery_verified'], $_SESSION['recovery_attempts']);
+        session_regenerate_id(true);
+        Flash::success('Contraseña actualizada. Ya puedes iniciar sesión con la nueva contraseña.');
+        self::go('/login');
     }
 }
