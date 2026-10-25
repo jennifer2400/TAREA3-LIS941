@@ -1,4 +1,22 @@
-<?php $pageTitle='Recuperar contraseña';require __DIR__.'/../layouts/header.php';require __DIR__.'/../layouts/navbar.php';require __DIR__.'/../layouts/alerts.php';?>
-<div class="container py-5" style="max-width:600px"><div class="card border-0 shadow-sm rounded-4 p-4"><h2>Recuperar contraseña</h2><p>Válido para clientes, empresas y administradores.</p><form method="post" action="<?=url('/recuperar-password')?>"><?=Csrf::field()?><label class="form-label" for="correo">Correo registrado</label><input class="form-control mb-3" type="email" id="correo" name="correo" required><button class="btn btn-primary">Solicitar enlace</button></form><p class="text-muted mt-3 small">En desarrollo puedes configurar <code>debug=true</code> para obtener el enlace en esta misma sesión. Para uso real debes configurar el envío de correo del servidor.</p>
-<?php $cfg=require __DIR__.'/../../config/config.php';$local=in_array($_SERVER['REMOTE_ADDR']??'', ['127.0.0.1','::1'],true);if(($cfg['app']['env']??'')==='development' && !empty($cfg['app']['debug']) && $local && !empty($_SESSION['development_reset_link'])):$resetLink=$_SESSION['development_reset_link'];unset($_SESSION['development_reset_link']);?><div class="alert alert-warning mt-3"><strong>Solo desarrollo local:</strong> <a href="<?=e($resetLink)?>">Restablecer contraseña</a>. No activar <code>debug</code> en servidores públicos.</div><?php endif;?></div></div>
-<?php require __DIR__.'/../layouts/footer.php'; ?>
+<?php
+$pageTitle = 'Recuperar contraseña';
+require __DIR__ . '/../layouts/header.php';
+require __DIR__ . '/../layouts/navbar.php';
+require __DIR__ . '/../layouts/alerts.php';
+?>
+<div class="container py-5" style="max-width:600px">
+  <div class="card border-0 shadow-sm rounded-4 p-4">
+    <h2 class="mb-2">Recuperar contraseña</h2>
+    <p class="text-muted">Ingresa tu nombre de usuario y el correo con el que te registraste.</p>
+    <form method="post" action="<?= e(url('/recuperar-password')) ?>">
+      <?= Csrf::field() ?>
+      <label for="usuario" class="form-label">Nombre de usuario</label>
+      <input class="form-control mb-3" type="text" name="usuario" id="usuario" autocomplete="username" maxlength="50" required>
+      <label for="correo" class="form-label">Correo registrado</label>
+      <input class="form-control mb-3" type="email" name="correo" id="correo" autocomplete="email" maxlength="100" required>
+      <button type="submit" class="btn btn-primary">Continuar</button>
+      <a class="btn btn-link" href="<?= e(url('/login')) ?>">Volver al inicio de sesión</a>
+    </form>
+  </div>
+</div>
+<?php require __DIR__ . '/../layouts/footer.php'; ?>
