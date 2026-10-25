@@ -1,1 +1,23 @@
+/* Estilos base para La Cuponera SV: puedes reemplazarlos con el CSS original. */
+:root { --cuponera: #5b45b0; }
+body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+.text-cuponera { color: var(--cuponera)!important; }
+.bg-cuponera { background-color: var(--cuponera)!important; }
+.bg-gradient-cuponera { background: linear-gradient(120deg,#5b45b0,#8668dc)!important; }
+.btn-cuponera { background: var(--cuponera); color: white; border-color: var(--cuponera); }
+.btn-cuponera:hover { background: #46318f; color: white; }
+.btn-outline-cuponera { border: 1px solid var(--cuponera); color: var(--cuponera); }
+.btn-outline-cuponera:hover { background:var(--cuponera);color:white; }
+.fw-extrabold {font-weight:800;}
+.tracking-tight {letter-spacing:-.035em;}
+.shadow-xs {box-shadow: 0 2px 7px #00000012;}
+.hover-lift {transition:transform .2s ease,box-shadow .2s ease;}
+.hover-lift:hover {transform:translateY(-3px);box-shadow:0 8px 22px #00000018!important;}
+.max-w-xl {max-width:740px;}
+.mx-auto {margin-left:auto;margin-right:auto;}
+.hero-section {background:linear-gradient(130deg,#f6f2ff,#fff);}
 
+/* Registro: mensajes de ayuda no deben compartir fila con los inputs */
+.input-group > .form-text, .input-group > .invalid-feedback {flex: 0 0 100%; width: 100%; margin-top: .375rem;}
+.input-group > .form-control {min-width: 0;}
+@media (max-width: 575.98px) {.card-body {padding: 1.25rem !important;} .input-group > .form-control {min-width: 0;}}
